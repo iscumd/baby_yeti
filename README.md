@@ -21,3 +21,7 @@ Verify motorcontroller:
   
 Add support for Intel RealSense T265,
 Add support for Hokuyo LIDAR ust-10lx
+
+Add dependencies to the CMakeLists.txt
+
+Create folders for the LiDAR and RealSense
