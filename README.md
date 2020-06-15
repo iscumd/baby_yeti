@@ -6,7 +6,8 @@ Contains:
 Submodule for isc_joy
   -need to edit default topic names
 
-PI controller based on ROS PI node;
+PI controller based on ROS PI node
+
 Sabertooth_2x12_motorcontroller:
   -supports different communication protocols,
   -python,
