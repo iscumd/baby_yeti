@@ -1,0 +1,8 @@
+<launch>
+	<!--Joystick-->
+	<include file="$(find isc_joy)/launch/joystick_xbox360.launch">
+	</include>
+
+	<!--   -->
+	
+</launch>
