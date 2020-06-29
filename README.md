@@ -18,7 +18,10 @@ TODO:
 
 Verify motorcontroller:
   -proper values written to pin 8 (Tx)?,
-  -need NVIDIA_gpio libraries?
+
+PI:
+-Integrate Arduino for encoder counts
+-Send counts to Nano
   
 Add support for Intel RealSense T265,
 Add support for Hokuyo LIDAR ust-10lx
