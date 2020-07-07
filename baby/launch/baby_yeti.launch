@@ -3,6 +3,12 @@
 	<include file="$(find isc_joy)/launch/joystick_xbox360.launch">
 	</include>
 
-	<!--   -->
+	<!--uart-->
+	
+	<!--PI-->
+	
+	<!--UST-10lx-->
+	
+	<!--T265-->
 	
 </launch>
