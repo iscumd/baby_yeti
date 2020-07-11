@@ -43,11 +43,11 @@ def twistToWheelSpeed(x, z):
 def sendWheelSpeedToMotors(left, right):
     leftChr = (64+((127*left)/2))
     rightChr = (64+((127*right)/2))+128 # it can go faster going left
-    eGirl = int(leftChr)
-    if eGirl == 0:
-        eGirl = 1
-    print(eGirl, int(rightChr))
-    serial_port.write(chr(eGirl))
+    leftint = int(leftChr)
+    if leftint == 0:
+        leftint = 1
+    print(leftint, int(rightChr))
+    serial_port.write(chr(leftint))
     serial_port.write(chr(int(rightChr)))
 
 #function calls
