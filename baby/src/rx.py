@@ -1,15 +1,22 @@
 #!/usr/bin/python3
-import math
 import time
 import serial
-import rospy #for talker/ listener
-from geometry_msgs.msg import Twist #for talker/ listener
+
+print("UART Demonstration Program")
+print("NVIDIA Jetson Nano Developer Kit")
 
 
-#Receives wheel encoder counts from Arduino mega and converts to linear speed
-print("Test for rx (receiving uart)")
+serial_port = serial.Serial(
+    port="/dev/ttyTHS1",
+    baudrate=19200,
+    bytesize=serial.EIGHTBITS,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+)
+# Wait a second to let the port initialize
+time.sleep(1)
 
-def encoderRead()
+try:
     # Send a simple header
     serial_port.write("UART Demonstration Program\r\n".encode())
     serial_port.write("NVIDIA Jetson Nano Developer Kit\r\n".encode())
@@ -30,17 +37,3 @@ finally:
     serial_port.close()
     pass
 
-#function calls
-if __name__ == '__main__':
-    serial_port = serial.Serial(
-        port="/dev/ttyTHS1",
-        baudrate=19200,
-        bytesize=serial.EIGHTBITS,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        )
-
-    rospy.init_node('uart', anonymous=True)
-    rate = rospy.Rate(10)
-    encoderRead()
-    rospy.spin()
