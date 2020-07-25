@@ -2,29 +2,9 @@
 import time
 import serial
 import rospy
+from std_msgs.msg import Int64
 
-print("reading")
-
-def readEncoders():
-	try:
-		while True:	
-			if serial_port.inWaiting() > 0:
-				encoderticks = serial_port.read(3)
-				print(encoderticks)
-				#penis = int.from_bytes(encoderticks, byteorder='little')
-		
-				#print(encoderticks)
-			
-	except KeyboardInterrupt:
-		print("Exiting Program")
-
-	except Exception as exception_error:
-		print("Error occurred. Exiting Program")
-		print("Error: " + str(exception_error))
-
-	finally:
-		serial_port.close()
-	pass
+print("wallah")
 
 if __name__ == '__main__':
 	serial_port = serial.Serial(
@@ -34,12 +14,26 @@ if __name__ == '__main__':
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         )
-
+	
+	pub = rospy.Publisher('encoders', Int64, queue_size=1)
 	rospy.init_node('rx', anonymous=True)	
 	rate = rospy.Rate(30)
-	readEncoders()
+
+	try:
+		while True:	
+			#if serial_port.inWaiting() > 0:
+			encoderticks = serial_port.read()
+			putty = int.from_bytes(encoderticks, byteorder='little')		
+			if serial_port.inWaiting() >= 0:
+				pub.publish(putty)
+				print(putty)
+			
+	except KeyboardInterrupt:
+		print("Exiting Program")
+	finally:
+		serial_port.close()
+	pass
+	
 	rospy.spin()
-
-
-
+	
 
