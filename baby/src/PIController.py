@@ -11,6 +11,7 @@ when effort > or < 0?
 we will either add or subtract.
 to mitigate the effects of a fast switch between poles, the current input must be looked at
 """
+
 import time
 import math
 import rospy #for talker/ listener
@@ -22,6 +23,7 @@ from simple_pid import PID
 joyLeft, joyRight = 0, 0 #values from joystick
 leftVel = 0 #values from encoders (need to add rightVel still)
 
+
 class Motor:
     #we need to take in controller input for setpoint
     #we need to take in encoder ticks, find linear speed (current state)
@@ -31,6 +33,7 @@ class Motor:
         self.speed = 0
 
     def update(self, effort, dt): # effort is result of pid function
+
         self.speed = leftVel
 
         if effort > 0:
@@ -93,16 +96,19 @@ def encoderCallback(msg):
     #perform PI work to generate desired work for system to perform
     #take the stuff from main
 
+
 if __name__ == '__main__':
     motor = Motor()
     speed = motor.speed
     joySpeed = joyLeft
 
     pid = PID(5, 0.01, 0, setpoint=joySpeed)#don't need D
+
     pid.output_limits = (0, 100)
 
     start_time = time.time()
     last_time = start_time
+
     # keep track of values for plotting
     #x, y = [], [] #these are for plotting
     setpoint = []
@@ -110,6 +116,7 @@ if __name__ == '__main__':
 
     rospy.init_node('PIController', anonymous=True)
     rate = rospy.Rate(10) #The others are 10Hz too
+
         #controller input:
     rospy.Subscriber("/manual_control_vel", Twist, controlInputCallback)
     print(joyLeft, joyRight) #int joystick inputs
@@ -118,6 +125,7 @@ if __name__ == '__main__':
     rospy.Subscriber("/encoderticks", Int64, encoderCallback)
     print(leftVel) #scaled encoder rpm
         #need for setting the actual speed
+
 
     while True:
     #while time.time() - start_time < 10: #from boiler example
@@ -132,6 +140,7 @@ if __name__ == '__main__':
         #x += [current_time - start_time] #for plotting
         #y += [speed] #for plotting
         setpoint += [pid.setpoint]
+
         if current_time - start_time > 1:
             pid.setpoint = 100
         last_time = current_time
@@ -144,3 +153,4 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 """
+

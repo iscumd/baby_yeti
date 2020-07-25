@@ -17,6 +17,10 @@
 	<include file="$(find isc_joy)/launch/joystick_xbox360.launch">
 	</include>
 
+	<!--Sabertooth 2x12 UART-->
+	<node pkg="baby_yeti" name="sabertooth_2x12_uart" type="sabertooth_2x12_uart.py">
+	</node>
+	
 	<!-- robot state control -->
 	<remap from="state/robot" to="$(arg state_base)/system" />
 	<remap from="signal/kill" to="$(arg signal_base)/kill" />
