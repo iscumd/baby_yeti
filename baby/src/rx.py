@@ -22,6 +22,7 @@ if __name__ == '__main__':
 	rate = rospy.Rate(30)
 
 	q.Queue(maxsize = 3)
+	incomming = 0
 	garbage = 0
 	c = channel_msgs()
 	c.left = left
@@ -33,12 +34,12 @@ if __name__ == '__main__':
 			putty = int.from_bytes(encoderticks, byteorder='little')
 
 			q.put_nowait(putty)
-			in = q.get_nowait()
-			if in != (lMarker || rMarker):
+			incomming = q.get_nowait()
+			if incomming != (lMarker or rMarker):
 				garbage = q.get_nowait()
-			elif in = lMakrer:
+			elif incomming == lMakrer:
 				left = q.get_nowait()
-			elif in = rMarker:
+			elif incomiing == rMarker:
 				right = q.get_nowait()
 			else:
 				print("error, check input data from encoders")
@@ -54,4 +55,3 @@ if __name__ == '__main__':
 	pass
 
 	rospy.spin()
-
