@@ -16,12 +16,12 @@ import time
 import math
 import rospy #for talker/ listener
 from geometry_msgs.msg import Twist #for talker/ listener
-from std_msgs.msg import Int64
+from baby.msg import channel_msgs #custom message for left and right encoder rpms
 #import matplotlib.pyplot as plt
 from simple_pid import PID
 
 joyLeft, joyRight = 0, 0 #values from joystick
-leftVel = 0 #values from encoders (need to add rightVel still)
+leftVel, rightVel = 0, 0 #values from encoders [-180, 180]
 
 
 class Motor:
@@ -82,20 +82,12 @@ def sendWheelSpeedToMotors(left, right): #from sabertooth
 def encoderCallback(msg):
     #(0,~180) rpms converted to (64,127)
     #Y=0.35+64
-    m, b = 0.35, 64
-
-    leftChannel = msg.data
-    #rightChannel = #have to fix Jetson split-up of Arduino first
-    leftVel = (m*leftChannel+b)
+    #m, b = 0.35, 64
     #rightVel = (m*rightChannel+b)
-        #return leftVel #, rightVel #made global
 
-#def PIController(JoystickLeft, JoystickRight, leftVel, rightVel):
-    #setpoint for left and right controller inputs
-    #actual values from encoder rpms
-    #perform PI work to generate desired work for system to perform
-    #take the stuff from main
-
+    #now we work in [-180, 180]
+    leftVel = msg.left
+    rightVel = msg.right
 
 if __name__ == '__main__':
     motor = Motor()
@@ -104,7 +96,7 @@ if __name__ == '__main__':
 
     pid = PID(5, 0.01, 0, setpoint=joySpeed)#don't need D
 
-    pid.output_limits = (0, 100)
+    pid.output_limits = (-180, 180)
 
     start_time = time.time()
     last_time = start_time
@@ -122,10 +114,10 @@ if __name__ == '__main__':
     print(joyLeft, joyRight) #int joystick inputs
         #need for setting setpoint
     #encoder ticks:
-    rospy.Subscriber("/encoderticks", Int64, encoderCallback)
+    rospy.Subscriber("/encoderticks", channel_msgs, encoderCallback)
     print(leftVel) #scaled encoder rpm
-        #need for setting the actual speed
-
+    print(rightVel)
+        #these will give actual speed
 
     while True:
     #while time.time() - start_time < 10: #from boiler example
@@ -153,4 +145,3 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 """
-
