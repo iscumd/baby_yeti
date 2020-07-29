@@ -18,7 +18,11 @@
 	</include>
 
 	<!--Sabertooth 2x12 UART-->
-	<node pkg="baby_yeti" name="sabertooth_2x12_uart" type="sabertooth_2x12_uart.py">
+	<node pkg="baby" name="sabertooth_2x12_uart" type="sabertooth_2x12_uart.py">
+	</node>
+
+	<!--PI_NEEDS_TO_BE_VERIFIED_IN_LAUNCH-->
+	<node pkg="baby" name="PI_Controller" type="PIController.py">
 	</node>
 	
 	<!-- robot state control -->
