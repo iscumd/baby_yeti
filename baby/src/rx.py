@@ -2,51 +2,59 @@
 import time
 import serial
 import rospy
+import queue
 from baby.msg import channel_msgs
 
 print("encoder input")
 left, right = 0,0
-lMarker, rMarker = 254, 255
+lMarker, rMarker = 255, 254
 
 if __name__ == '__main__':
 	serial_port = serial.Serial(
 	port="/dev/ttyTHS1",
 	baudrate=19200,
-    bytesize=serial.EIGHTBITS,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    )
+	bytesize=serial.EIGHTBITS,
+	parity=serial.PARITY_NONE,
+	stopbits=serial.STOPBITS_ONE,
+	)
 
-	pub = rospy.Publisher('encoders', channel_msgs, queue_size=1)
 	rospy.init_node('rx', anonymous=True)
+	pub = rospy.Publisher('encoders', channel_msgs, queue_size=10)
 	rate = rospy.Rate(30)
 
-	q.Queue(maxsize = 3)
-	incomming = 0
-	garbage = 0
+	queue = []
+
 	c = channel_msgs()
-	c.left = left
-	c.right = right
+
+	l, r = False, False
 
 	try:
 		while True:
 			encoderticks = serial_port.read()
 			putty = int.from_bytes(encoderticks, byteorder='little')
-
-			q.put_nowait(putty)
-			incomming = q.get_nowait()
-			if incomming != (lMarker or rMarker):
-				garbage = q.get_nowait()
-			elif incomming == lMakrer:
-				left = q.get_nowait()
-			elif incomiing == rMarker:
-				right = q.get_nowait()
+			
+			if putty == lMarker:
+				l = True
+			elif putty == rMarker:
+				r = True
+			elif l == True:
+				left = putty
+				c.left = left
+				l = False
+			elif r == True:
+				right = putty
+				c.right = right
+				r = False
 			else:
-				print("error, check input data from encoders")
+				print("garbage")
+
+			c.left = left
+			c.right = right
+			print(c)
 
 			if serial_port.inWaiting() >= 0:
-				pub.publish(c)
-				#print(c) #for debug
+				pub.publish('c')
+
 
 	except KeyboardInterrupt:
 		print("Exiting Program")
@@ -54,4 +62,4 @@ if __name__ == '__main__':
 		serial_port.close()
 	pass
 
-	rospy.spin()
+rospy.spin()
