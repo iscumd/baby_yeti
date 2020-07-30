@@ -7,12 +7,12 @@ Need to determine if the sabertooth code needs to be implemented
 Need to determine how many times PID must be called for one Setpoint (how many function calls for a left turn?)
 Need to determine if function is too intensive for Jetson (Nate fan disapproves)
 Need to remove global variables
-
 """
 
 import time
 import math
 import rospy #for talker/ listener
+import serial #to send to Sabertooth
 from geometry_msgs.msg import Twist #for talker/ listener
 from baby.msg import channel_msgs #custom message for left and right encoder rpms
 #import matplotlib.pyplot as plt
@@ -27,25 +27,29 @@ class Motor:
     #we need to take in controller input for setpoint
     #we need to take in encoder ticks, find linear speed (current state)
     #essentially make motor go brr in a smooth manner (purr)
-
 	def __init__(self):
-		self.speed = 0
+		self.lspeed = 0
+		self.rspeed = 0
 
-	def update(self, effort, dt): # effort is result of pid function
-
-		self.speed = leftVel
-
-		if effort > 0:
-			# change speed in attempt to match setpoint
-			self.speed += 1 * effort * dt
-
-		if effort < 0:
-			# change speed in attempt to match setpoint
-			self.speed -= 1 * effort * dt
-
+	def lupdate(self, effort, dt): # effort is result of pid function
+		self.lspeed = leftVel
+		# change speed in attempt to match setpoint
+		self.lspeed += 1 * effort * dt
+		leftInt = ((0.35*self.lspeed) +64)
+		if leftInt == 0:
+			leftInt = 1
+		serial_port.write(chr(leftInt))
 		return self.speed
 
-def controlInputCallback(msg): 
+	def rupdate(self, effort, dt): # effort is result of pid function
+		self.rspeed = leftVel
+		# change speed in attempt to match setpoint
+		self.rspeed += 1 * effort * dt
+		rightInt = ((0.35*rightVel) +64) +128 # it can go faster going left
+		serial_port.write(chr(rightInt))
+		return self.rspeed
+
+def controlInputCallback(msg):
 	x = msg.linear.x      # -1 < x < 1
 	if x >= 0:
 		fowards = True
@@ -77,17 +81,6 @@ def twistToWheelSpeed(x, z): #from sabertooth
 	scaledRight = int(right*180) #[-180, 180]
 	return scaledLeft, scaledRight
 
-"""
-def sendWheelSpeedToMotors(left, right): #from sabertooth
-	leftChr = (64+((127*left)/2))
-	rightChr = (64+((127*right)/2))+128 # it can go faster going left
-	leftint = int(leftChr)
-	if leftint == 0:
-		leftint = 1
-	rightint = int(rightChr)
-	return leftint, rightint
-"""
-
 
 # (0,~180) rpms converted to (64,127)
 # Y=0.35+64
@@ -106,51 +99,59 @@ def encoderCallback(msg):
 		rightVel = (-1*rightEncoder)
 
 if __name__ == '__main__':
+	# keep track of values for plotting
+	#x, y = [], [] #these are for plotting
+	#setpoint = []
+	serial_port = serial.Serial(
+	port="/dev/ttyTHS1",
+	baudrate=19200,
+	bytesize=serial.EIGHTBITS,
+	parity=serial.PARITY_NONE,
+	stopbits=serial.STOPBITS_ONE,
+	)
+	rospy.init_node('PIController', anonymous=True)
+	rate = rospy.Rate(10) # The others are 10Hz too
+
 	motor = Motor()
-	speed = motor.speed
-	joySpeed = joyLeft
 
-	pid = PID(5, 0.01, 0, setpoint=joySpeed) # don't need D
+	lspeed = motor.lspeed
+	rspeed = motor.rspeed
 
-	pid.output_limits = (-180, 180)
+	ljoySpeed = joyLeft
+	rjoySpeed = joyRight
+
+	lpid = PID(5, 0.01, 0, setpoint=ljoySpeed) # don't need kd
+	rpid = PID(5, 0.01, 0, setpoint=rjoySpeed) # don't need kd
+
+	lpid.output_limits = (-180, 180)
+	rpid.output_limits = (-180, 180)
 
 	start_time = time.time()
 	last_time = start_time
-
-	# keep track of values for plotting
-	#x, y = [], [] #these are for plotting
-	setpoint = []
-
-
-	rospy.init_node('PIController', anonymous=True)
-	rate = rospy.Rate(10) # The others are 10Hz too
 
 	rospy.Subscriber("/manual_control_vel", Twist, controlInputCallback)
 	# int joystick inputs
 	# these represent setpoint
 	#print(joyLeft, joyRight)
-
 	rospy.Subscriber("/encoderticks", channel_msgs, encoderCallback)
-	# rpms        
+	# rpms
 	# these will give actual speed
 	#print(leftVel, rightVel)
 
 	while True:
-	#while time.time() - start_time < 10: #from boiler example
+		#x += [current_time - start_time] #for plotting
+		#y += [speed] #for plotting
+		#setpoint += [pid.setpoint]
 		current_time = time.time()
 		dt = current_time - last_time
 
-		power = pid(speed)
-		print(power)
-		time.sleep(0.1)
-		speed = motor.update(power, dt)
+		lpower = lpid(lspeed)
+		#print(lpower) #for debugging
+		#time.sleep(0.1) #for debugging
+		lspeed = motor.lupdate(lpower, dt)
+		rpower = rpid(rspeed)
+		rspeed = motor.rupdate(rpower, dt)
 
-		#x += [current_time - start_time] #for plotting
-		#y += [speed] #for plotting
-		setpoint += [pid.setpoint]
-
-		if current_time - start_time > 1:
-			pid.setpoint = 100
 		last_time = current_time
 
 """
