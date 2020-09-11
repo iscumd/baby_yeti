@@ -15,17 +15,3 @@ Sabertooth_2x12_motorcontroller:
   -serial version: new version, needs to be tested with motorcontroller and motors
 
 TODO:
-
-Verify motorcontroller:
-  -proper values written to pin 8 (Tx)?,
-
-PI:
--Integrate Arduino for encoder counts
--Send counts to Nano
-  
-Add support for Intel RealSense T265,
-Add support for Hokuyo LIDAR ust-10lx
-
-Add dependencies to the CMakeLists.txt
-
-Create folders for the LiDAR and RealSense
