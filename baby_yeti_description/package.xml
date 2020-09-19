@@ -3,9 +3,9 @@
 <package format="3">
   <name>baby_yeti_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="dcutting@umich.edu">rosdev</maintainer>
-  <license>TODO: License declaration</license>
+  <description>A package containing files necessary to visualize and model the Baby Yeti testbed.</description>
+  <maintainer email="dcutting@umich.edu">David Cutting</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
