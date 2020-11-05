@@ -1,0 +1,23 @@
+- git: {
+	local-name: 'baby_yeti',
+	uri: 'https://github.com/iscumd/baby_yeti.git',
+	version: "ros2"
+}
+
+- git: {
+	local-name: 'robot_state_controller',
+	uri: 'https://github.com/iscumd/robot_state_controller.git',
+	version: "ros2"
+}
+
+- git: {
+	local-name: 'teleop_twist_joy',
+	uri: 'https://github.com/ros2/teleop_twist_joy.git'
+	version: "eloquent"
+}
+
+- git: {
+	local-name: 'urg_node',
+	uri: 'https://github.com/ros-drivers/urg_node.git'
+	version: "ros2-devel"
+}
