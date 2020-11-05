@@ -15,11 +15,34 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+######################################################################################
+
+# FIND AMENT DEPENDENCIES
+
+######################################################################################
+
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(baby_yeti_description REQUIRED)
+find_package(gazebo_ros REQUIRED)
+# find_package(joint_state_publisher REQUIRED) # this errors out on foxy for some reason? not necessary to run :shrug:
+find_package(robot_state_publisher REQUIRED)
+
+######################################################################################
+
+# INSTALL
+
+######################################################################################
+
+install(DIRECTORY
+        launch
+        DESTINATION share/${PROJECT_NAME}/
+)
+
+######################################################################################
+
+# TESTING
+
+######################################################################################
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
