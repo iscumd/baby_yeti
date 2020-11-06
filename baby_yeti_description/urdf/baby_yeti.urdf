@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
-<robot name="lawnbot">
+<robot name="baby_yeti">
 
   <!--
       ROBOT BASE
   -->
-
   <link name="base_link">
     <visual>
       <geometry>
@@ -16,80 +15,19 @@
         <box size="0.8 0.4 0.3"/>
       </geometry>
     </collision>
-    <!--inertial>
+    <inertial>
       <mass value="45"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <inertia
         ixx="2.7375"  ixy="0.0" ixz="0.0"
                       iyy="3.0" iyz="0.0"
                                 izz="0.9375"/>
-    </inertial-->
-  </link>
-
-<!--
-    BACK RIGHT WHEEL LINK AND JOINT
--->
-
-  <link name="wheel_br">
-    <visual>
-      <geometry>
-        <cylinder length="0.075" radius="0.125"/>
-      </geometry>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.075" radius="0.125"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="1.1"/>
-      <inertia
-        ixx="0.0048125" ixy="0.0"       ixz="0.0"
-                        iyy="0.0048125" iyz="0.0"
-                                        izz="0.00859375"/>
     </inertial>
   </link>
-
-  <joint name="base_to_wheel_br" type="continuous">
-    <axis xyz="0 0 1"/>
-    <origin rpy="1.57 -3.14159 0" xyz="0.3 0.2375 -0.1"/>
-    <parent link="base_link"/>
-    <child link="wheel_br"/>
-  </joint>
 
   <!--
-      BACK LEFT WHEEL LINK AND JOINT
+      FRONT RIGHT WHEEL LINK AND JOINT
   -->
-
-  <link name="wheel_bl">
-    <visual>
-      <geometry>
-        <cylinder length="0.075" radius="0.125"/>
-      </geometry>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.075" radius="0.125"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="1.1"/>
-      <inertia
-        ixx="0.0048125" ixy="0.0"       ixz="0.0"
-                        iyy="0.0048125" iyz="0.0"
-                                        izz="0.00859375"/>
-    </inertial>
-  </link>
-
-  <joint name="base_to_wheel_bl" type="continuous">
-    <axis xyz="0 0 1"/>
-    <origin rpy="1.57 -3.14159 0" xyz="0.3 -0.2375 -0.1"/>
-    <parent link="base_link"/>
-    <child link="wheel_bl"/>
-  </joint>
-
-<!--
-    FRONT RIGHT WHEEL LINK AND JOINT
--->
 
   <link name="wheel_fr">
     <visual>
@@ -104,6 +42,7 @@
     </collision>
     <inertial>
       <mass value="1.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <inertia
         ixx="0.0048125" ixy="0.0"       ixz="0.0"
                         iyy="0.0048125" iyz="0.0"
@@ -113,7 +52,7 @@
 
   <joint name="base_to_wheel_fr" type="continuous">
     <axis xyz="0 0 1"/>
-    <origin rpy="1.57 -3.14159 0" xyz="-0.3 0.2375 -0.1"/>
+    <origin rpy="1.57 0 0" xyz="0.3 -0.2375 -0.1"/>
     <parent link="base_link"/>
     <child link="wheel_fr"/>
   </joint>
@@ -135,6 +74,7 @@
     </collision>
     <inertial>
       <mass value="1.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <inertia
         ixx="0.0048125" ixy="0.0"       ixz="0.0"
                         iyy="0.0048125" iyz="0.0"
@@ -144,9 +84,73 @@
 
   <joint name="base_to_wheel_fl" type="continuous">
     <axis xyz="0 0 1"/>
-    <origin rpy="1.57 -3.14159 0" xyz="-0.3 -0.2375 -0.1"/>
+    <origin rpy="1.57 0 0" xyz="0.3 0.2375 -0.1"/>
     <parent link="base_link"/>
     <child link="wheel_fl"/>
+  </joint>
+
+  <!--
+      BACK RIGHT WHEEL LINK AND JOINT
+  -->
+
+  <link name="wheel_br">
+    <visual>
+      <geometry>
+        <cylinder length="0.075" radius="0.125"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.075" radius="0.125"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia
+        ixx="0.0048125" ixy="0.0"       ixz="0.0"
+                        iyy="0.0048125" iyz="0.0"
+                                        izz="0.00859375"/>
+    </inertial>
+  </link>
+
+  <joint name="base_to_wheel_br" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin rpy="1.57 0 0" xyz="-0.3 -0.2375 -0.1"/>
+    <parent link="base_link"/>
+    <child link="wheel_br"/>
+  </joint>
+
+  <!--
+      BACK LEFT WHEEL LINK AND JOINT
+  -->
+
+  <link name="wheel_bl">
+    <visual>
+      <geometry>
+        <cylinder length="0.075" radius="0.125"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.075" radius="0.125"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia
+        ixx="0.0048125" ixy="0.0"       ixz="0.0"
+                        iyy="0.0048125" iyz="0.0"
+                                        izz="0.00859375"/>
+    </inertial>
+  </link>
+
+  <joint name="base_to_wheel_bl" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin rpy="1.57 0 0" xyz="-0.3 0.2375 -0.1"/>
+    <parent link="base_link"/>
+    <child link="wheel_bl"/>
   </joint>
 
   <!--
